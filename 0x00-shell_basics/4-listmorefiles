@@ -1,10 +1,2 @@
 #!/bin/bash
-total 24
-drwxr-xr-x 2 root root 139 Mar  8 13:32 .
-drwxr-xr-x 4 root root  60 Mar  8 05:26 ..
--rwxr--r-- 1 root root  16 Mar  8 05:13 0-current_working_directory
--rwxr--r-- 1 root root  15 Mar  8 08:19 1-listit
--rwxr--r-- 1 root root  17 Mar  8 13:19 2-bring_me_home
--rwxr-xr-x 1 root root  18 Mar  8 13:26 3-listfiles
--rw-r--r-- 1 root root  12 Mar  8 13:33 4-listmorefiles
--rw-r--r-- 1 root root  75 Mar  8 05:24 README.md
+ls -al
