@@ -1,1 +1,1 @@
-#SCHATZ  shell redirections
+# SCHATZ  shell redirections
