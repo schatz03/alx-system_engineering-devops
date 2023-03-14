@@ -1,1 +1,1 @@
-#KM8Oz shell redirections
+#SCHATZ  shell redirections
