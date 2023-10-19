@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 # the script stops apache2 and start nginx as web service under user nginx
-chmod o+wr /etc/nginx/nginx.conf
-sed -i "s/listen 80 default_server;/listen 8080 default_server;/" /etc/nginx/sites-available/default
-sed -i "s/listen \[::\]:80/listen [::]:8080/" /etc/nginx/sites-available/default
-pkill apache2
-sudo -u nginx service nginx start
+systemctl is-active --quiet apache2 && systemctl stop apache2
+
+# Start Nginx with custom configuration
+echo "user nginx;worker_processes 4;events {worker_connections 1024;} http {server {listen 8080;}}" | sudo -u nginx nginx -g "daemon off;"
