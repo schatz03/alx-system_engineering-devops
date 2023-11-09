@@ -1,63 +1,45 @@
 #!/usr/bin/python3
-""" Module for storing the count_words function. """
-from requests import get
+"""
+    Query the Reddit API,
+    parses the title of all hot articles,
+    and prints a sorted count of given keywords
+"""
+
+import requests
 
 
-def count_words(subreddit, word_list, word_count=[], page_after=None):
-    """
-    Prints the count of the given words present in the title of the
-    subreddit's hottest articles.
-    """
-    headers = {'User-Agent': 'HolbertonSchool'}
+def convert_lower(w, i, len_w):
+    """Convert strings to lowercase"""
+    if i >= len_w:
+        return None
 
-    word_list = [word.lower() for word in word_list]
+    w[i] = w[i].lower()
+    convert_lower(w, i + 1, len_w)
 
-    if bool(word_count) is False:
-        for word in word_list:
-            word_count.append(0)
+    return None
 
-    if page_after is None:
-        url = 'https://www.reddit.com/r/{}/hot.json'.format(subreddit)
-        r = get(url, headers=headers, allow_redirects=False)
-        if r.status_code == 200:
-            for child in r.json()['data']['children']:
-                i = 0
-                for i in range(len(word_list)):
-                    for word in [w for w in child['data']['title'].split()]:
-                        word = word.lower()
-                        if word_list[i] == word:
-                            word_count[i] += 1
-                    i += 1
 
-            if r.json()['data']['after'] is not None:
-                count_words(subreddit, word_list,
-                            word_count, r.json()['data']['after'])
-    else:
-        url = ('https://www.reddit.com/r/{}/hot.json?after={}'
-               .format(subreddit,
-                       page_after))
-        r = get(url, headers=headers, allow_redirects=False)
+def count_word_title(title, i, len_t, dict_words_unique):
+    """Store repeating string in hash table"""
+    if i >= len_t:
+        return None
 
-        if r.status_code == 200:
-            for child in r.json()['data']['children']:
-                i = 0
-                for i in range(len(word_list)):
-                    for word in [w for w in child['data']['title'].split()]:
-                        word = word.lower()
-                        if word_list[i] == word:
-                            word_count[i] += 1
-                    i += 1
-            if r.json()['data']['after'] is not None:
-                count_words(subreddit, word_list,
-                            word_count, r.json()['data']['after'])
-            else:
-                dicto = {}
-                for key_word in list(set(word_list)):
-                    i = word_list.index(key_word)
-                    if word_count[i] != 0:
-                        dicto[word_list[i]] = (word_count[i] *
-                                               word_list.count(word_list[i]))
+    if title[i] in dict_words_unique:
+        dict_words_unique[title[i]] += 1
 
-                for key, value in sorted(dicto.items(),
-                                         key=lambda x: (-x[1], x[0])):
-                    print('{}: {}'.format(key, value))
+    count_word_title(title, i + 1, len_t, dict_words_unique)
+
+    return None
+
+
+def store_title_word_hash(list_title, i, len_l, dict_words_unique):
+    """Run trough a list of hot titles"""
+    if i >= len_l:
+        return None
+
+    title = list_title[i]["data"]["title"].lower().split(" ")
+
+    count_word_title(title, 0, len(title), dict_words_unique)
+
+    store_title_word_hash(list_title, i + 1, len_l, dict_words_unique)
+
