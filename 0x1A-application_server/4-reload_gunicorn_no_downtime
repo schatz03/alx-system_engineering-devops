@@ -1,8 +1,7 @@
 #!/bin/bash
 
-# Get the process IDs of the Gunicorn master and workers
+# Get the process ID of the Gunicorn master
 master_pid=$(ps aux | grep '[g]unicorn' | awk '{print $2}')
-worker_pids=$(pgrep -P $master_pid)
 
 # Display the current Gunicorn processes
 echo "Before reload:"
